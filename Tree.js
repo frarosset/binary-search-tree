@@ -62,6 +62,29 @@ export default class Tree{
     //       and being able to modify the pointed data, which is not 
     //       possible in js
 
+
+    // the following method returns the node with the given value
+    find(data){
+        return this.#findProcessNode(data,this.#root);
+    }
+    // the following method is an helper method for the insert() method
+    // the proper subtree is selected and its child node is processed
+    #find(data,node){
+        let side = node.getSubtreeSide(data);
+        return this.#findProcessNode(data,node[side]);
+    }
+    // the following method process a single node (no need to modify the pointed node)
+    #findProcessNode(data,node){
+        if (node){
+            if (node.data !== data)
+                return this.#find(data, node);
+            else // node.data === data
+                return node;
+        } else{
+            return null;
+        }
+    }
+
     // The following method has been adapted from the function in 
     // https://www.theodinproject.com/lessons/javascript-binary-search-trees
     prettyPrint(node = this.#root, prefix = "", isLeft = true){
