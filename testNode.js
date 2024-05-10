@@ -4,7 +4,7 @@ let nodeLeft = new Node('L');
 let nodeRight = new Node('R');
 
 let nodeRoot = new Node('N',nodeLeft, nodeRight);
-let printNode = (node) => node ? node.data : node;
+let printNode = (node) => `'${node ? node.data : node}'`;
 
 console.log('Root node: ', printNode(nodeRoot));
 console.log('-Left node: ', printNode(nodeRoot.left));

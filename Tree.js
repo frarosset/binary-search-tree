@@ -63,6 +63,98 @@ export default class Tree{
     //       possible in js
 
 
+    // the following method deletes the given value
+    // there are four cases:
+    // 1) the value is not present: do nothing
+    // 2) the node with the value is a leaf: set the leaf as null
+    // 3) the node has only one child: replace the node with the child
+    // 4) the node has both children: replace the node with the node with the
+    //    smallest value in the right subtree (*), and 'remove' the latter 
+    //    node (*) as in 3). Note that the node (*) has either no child or the right child    
+    delete(data){
+        if (this.#root){
+            if (this.#root.data !== data)
+                this.#delete(data, this.#root);
+            else { // node.data === data
+                // delete the node this.#root
+                if (this.#root.left === null){
+                    this.#root = this.#root.right;
+                } else {
+                    if (this.#root.right === null){
+                        // The node to delete has 1 child
+                        this.#root = this.#root.left;
+                    } else {
+                        // find the inorder successor of the node
+                        const inorderSuccessor = this.#findInorderSuccessor(this.#root);
+                        //const printNode = (node) => `'${node ? node.data : node}'`;
+                        //console.log(`Successor of ${printNode(this.#root)} is ${printNode(inorderSuccessor.node)} at the ${inorderSuccessor.side} of ${printNode(inorderSuccessor.parent)}`);
+                        // delete the inorder successor from the tree
+                        // see #delete(data,node) for details
+                        inorderSuccessor.parent[inorderSuccessor.side] = inorderSuccessor.node.right;
+                        // copy contents (data) of the inorder successor to the node
+                        this.#root.data = inorderSuccessor.node.data;
+                }
+                }
+            }
+        }
+    }
+    // the following method is an helper method for the delete() method
+    // the proper subtree is selected and its child node is processed
+    #delete(data,node){
+        let side = node.getSubtreeSide(data);
+        if (node[side]){
+            if (node[side].data !== data)
+                this.#delete(data, node[side]);
+            else { // node.data === data
+                // delete the node node[side]
+                if (node[side].left === null){
+                    // There are two cases:
+                    // - either the node to delete has no children (node[side].right === null)
+                    // - or it has just 1 child (node[side].right)
+                    node[side] = node[side].right;
+                } else {
+                    if (node[side].right === null){
+                        // The node to delete has 1 child
+                        node[side] = node[side].left;
+                    } else {
+                        // find the inorder successor of the node
+                        const inorderSuccessor = this.#findInorderSuccessor(node[side]);
+                        //const printNode = (node) => `'${node ? node.data : node}'`;
+                        //console.log(`Successor of ${printNode(node[side])} is ${printNode(inorderSuccessor.node)} at the ${inorderSuccessor.side} of ${printNode(inorderSuccessor.parent)}`);
+                        // delete the inorder successor from the tree
+                        // this has to be done before updating the .left and .right nodes with the older values
+                        // indeed, if the inorder successor is node[side].right, it will not be the .right node 
+                        // when replacing the node[side] with the inorder successor
+                        // You can avoid calling this.#delete(inorderSuccessor.node.data,node[side]);  
+                        // and to traverse again part of the tree, as follows
+                        inorderSuccessor.parent[inorderSuccessor.side] = inorderSuccessor.node.right;
+                        // copy contents (data) of the inorder successor to the node
+                        node[side].data = inorderSuccessor.node.data;
+                   }
+                }
+            }
+        }
+    }
+    #findInorderSuccessor(node){
+        if (node.right){
+            if (node.right.left)
+                return this.#findSmallestSuccessor(node.right);
+            else
+                return ({node: node.right, parent: node,side: 'right'});
+        } else {
+             return null;
+        }
+    }
+    #findSmallestSuccessor(node){
+        // This is to be called by #findInorderSuccessor and by #findSmallestSuccessor itself
+        // So, node.left exists by construction
+        if (node.left.left)
+            return this.#findSmallestSuccessor(node.left);
+        else
+            return ({node: node.left, parent: node,side: 'left'});
+    }
+
+
     // the following method returns the node with the given value
     find(data){
         return this.#findProcessNode(data,this.#root);

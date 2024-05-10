@@ -22,6 +22,13 @@ for (let data of dataToFind){
     console.log(`\nThe node with value ${data} is ${printNode(matchingNode)}`);
 }
 
+let dataToDelete = [9, 8,67, 23, 3, 4, 123];
+for (let data of dataToDelete){
+    console.log(`\nDeleting node with value ${data}`);
+    tree.delete(data);
+    tree.prettyPrint();
+}
+
 // ---------------------------------------------------------------------
 
 let emptyTree = new Tree([]);
@@ -32,5 +39,10 @@ emptyTree.prettyPrint();
 for (let data of dataToInsert){
     console.log(`\nInserting value ${data}`);
     emptyTree.insert(data);
+    emptyTree.prettyPrint();
+}
+for (let data of dataToInsert){
+    console.log(`\nDeleting node with value ${data}`);
+    emptyTree.delete(data);
     emptyTree.prettyPrint();
 }
