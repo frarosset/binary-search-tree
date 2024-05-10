@@ -29,4 +29,8 @@ export default class Node{
     get right(){
         return this.#right;
     }
+
+    getSubtreeSide(data){
+        return data < this.#data ? 'left' : data > this.#data ? 'right' : null;
+    }
 }

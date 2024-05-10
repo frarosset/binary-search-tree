@@ -18,7 +18,7 @@ for (let data of dataToInsert){
 
 let emptyTree = new Tree([]);
 
-console.log('Balanced Search Tree (empty):');
+console.log('\n\nBalanced Search Tree (empty):');
 emptyTree.prettyPrint();
 
 for (let data of dataToInsert){
