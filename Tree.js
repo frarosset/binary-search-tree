@@ -339,6 +339,16 @@ export default class Tree{
         return list;
     }
 
+
+    // The following method  returns the given node’s height,
+    // i.e., the number of edges in the longest path from a given node to a leaf node.
+    // If the node is null (eg, if node=tree.find(dataNotInTheTree)), it returns -1
+    height(node=this.#root){
+        if (!node)
+            return -1;
+        return Math.max(this.height(node.left), this.height(node.right)) + 1;
+    }
+
     // The following method has been adapted from the function in 
     // https://www.theodinproject.com/lessons/javascript-binary-search-trees
     prettyPrint(node = this.#root, prefix = "", isLeft = true){
