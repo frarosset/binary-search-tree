@@ -49,16 +49,24 @@ for (let data of dataToInsert){
 
 console.log('\n\nBalanced Search Tree (re-filled):');
 tree = new Tree(array);
-tree.prettyPrint();
+
 
 const testCallback = (node) => {console.log(`testCallback: processing node ${tree.printNode(node)}`)};
-
 console.log('\n\nBFS: Level-Order traversal (callback):');
 tree.levelOrder(testCallback);
 console.log('\nBFS: Level-Order traversal (without callback):')
 console.log(tree.levelOrder());
+tree.prettyPrint();
+
 
 console.log('\n\nDFS: In-Order traversal {Left-Root-Right} (callback):');
 tree.inOrder(testCallback);
 console.log('\nDFS: In-Order traversal {Left-Root-Right} (without callback):')
 console.log(tree.inOrder());
+tree.prettyPrint();
+
+console.log('\n\nDFS: Pre-Order traversal {Root-Left-Right} (callback):');
+tree.preOrder(testCallback);
+console.log('\nDFS: Pre-Order traversal {Root-Left-Right} (without callback):')
+console.log(tree.preOrder());
+tree.prettyPrint();
