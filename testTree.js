@@ -29,20 +29,20 @@ for (let data of dataToDelete){
 
 // ---------------------------------------------------------------------
 
-let emptyTree = new Tree([]);
+tree = new Tree([]);
 
 console.log('\n\nBalanced Search Tree (empty):');
-emptyTree.prettyPrint();
+tree.prettyPrint();
 
 for (let data of dataToInsert){
     console.log(`\nInserting value ${data}`);
-    emptyTree.insert(data);
-    emptyTree.prettyPrint();
+    tree.insert(data);
+    tree.prettyPrint();
 }
 for (let data of dataToInsert){
     console.log(`\nDeleting node with value ${data}`);
-    emptyTree.delete(data);
-    emptyTree.prettyPrint();
+    tree.delete(data);
+    tree.prettyPrint();
 }
 
 // ---------------------------------------------------------------------

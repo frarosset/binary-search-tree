@@ -182,9 +182,11 @@ export default class Tree{
     levelOrder(callback){
         if (callback){
             this.#levelOrderCallback(callback);
+            //this.#levelOrderCallbackRecursive(callback);
         }
         else{
             return this.#levelOrderList();
+            //return this.#levelOrderListRecursive();
         }
     }
     #levelOrderCallback(callback){ // iterative approach
@@ -217,6 +219,33 @@ export default class Tree{
                 queue.push(node.right);
             list.push(node.data);
         }
+        return list;
+    }
+    #levelOrderCallbackRecursive(callback,queue=this.#root?[this.#root]:[]){ // recursive approach
+        if (!queue.length)
+            return;
+        //console.log(queue.map(node => this.printNode(node)));
+        let node = queue.shift();
+        if (node.left)
+            queue.push(node.left);
+        if (node.right)
+            queue.push(node.right);
+        callback(node);
+        // recursive call
+        this.#levelOrderCallbackRecursive(callback,queue);
+    }
+    #levelOrderListRecursive(callback,queue=this.#root?[this.#root]:[],list=[]){ // recursive approach
+        if (!queue.length)
+            return list;
+        //console.log(queue.map(node => this.printNode(node)));
+        let node = queue.shift();
+        if (node.left)
+            queue.push(node.left);
+        if (node.right)
+            queue.push(node.right);
+        list.push(node.data);
+        // recursive call
+        list = this.#levelOrderListRecursive(callback,queue,list);
         return list;
     }
 
