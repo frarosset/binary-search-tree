@@ -1,36 +1,36 @@
 import Node from './Node.js'
 
-export default class Tree{
+export default class Tree {
     #root = null;
 
-    constructor(array=[]){
+    constructor(array = []) {
         this.#root = this.#buildTree(array);
     }
 
     // the following method takes an array of data and turns it into a balanced 
     // binary tree full of Node objects appropriately placed
-    #buildTree(array){
+    #buildTree(array) {
         // remove duplicates (to simplify the tree balancing)
         array = array.filter((val, idx, arr) => arr.indexOf(val) === idx);
-        
+
         // sort the array using the sort() method
         // its complexity depends on the implementation
         // however, you can expect O(n log(n)) if using Mergesort	
-        array.sort((a,b) => a-b);
+        array.sort((a, b) => a - b);
 
         // the BSC is built in O(n) using the sorted array data
-        return this.#buildTreeFromSortedArray(array,0,array.length-1);
+        return this.#buildTreeFromSortedArray(array, 0, array.length - 1);
     }
 
-    #buildTreeFromSortedArray(array,start,end){
+    #buildTreeFromSortedArray(array, start, end) {
         if (start > end)
             return null;
 
         let mid = Math.ceil((start + end) / 2);
 
         let root = new Node(array[mid]);
-        root.left = this.#buildTreeFromSortedArray(array,start,mid-1);
-        root.right = this.#buildTreeFromSortedArray(array,mid+1,end);
+        root.left = this.#buildTreeFromSortedArray(array, start, mid - 1);
+        root.right = this.#buildTreeFromSortedArray(array, mid + 1, end);
 
         return root;
     }
@@ -38,22 +38,22 @@ export default class Tree{
     // the following method inserts the given value
     // such value is inserted as a leaf in the tree, 
     // so that the tree is not rearranged
-    insert(data){
-        if (this.#root){
+    insert(data) {
+        if (this.#root) {
             if (this.#root.data !== data)
                 this.#insert(data, this.#root);
-        } else{
+        } else {
             this.#root = new Node(data);
         }
     }
     // the following method is an helper method for the insert() method
     // the proper subtree is selected and its child node is processed
-    #insert(data,node){
+    #insert(data, node) {
         let side = node.getSubtreeSide(data);
-        if (node[side]){
+        if (node[side]) {
             if (node[side].data !== data)
                 this.#insert(data, node[side]);
-        } else{
+        } else {
             node[side] = new Node(data);
         }
     }
@@ -71,16 +71,16 @@ export default class Tree{
     // 4) the node has both children: replace the node with the node with the
     //    smallest value in the right subtree (*), and 'remove' the latter 
     //    node (*) as in 3). Note that the node (*) has either no child or the right child    
-    delete(data){
-        if (this.#root){
+    delete(data) {
+        if (this.#root) {
             if (this.#root.data !== data)
                 this.#delete(data, this.#root);
             else { // node.data === data
                 // delete the node this.#root
-                if (this.#root.left === null){
+                if (this.#root.left === null) {
                     this.#root = this.#root.right;
                 } else {
-                    if (this.#root.right === null){
+                    if (this.#root.right === null) {
                         // The node to delete has 1 child
                         this.#root = this.#root.left;
                     } else {
@@ -92,27 +92,27 @@ export default class Tree{
                         inorderSuccessor.parent[inorderSuccessor.side] = inorderSuccessor.node.right;
                         // copy contents (data) of the inorder successor to the node
                         this.#root.data = inorderSuccessor.node.data;
-                }
+                    }
                 }
             }
         }
     }
     // the following method is an helper method for the delete() method
     // the proper subtree is selected and its child node is processed
-    #delete(data,node){
+    #delete(data, node) {
         let side = node.getSubtreeSide(data);
-        if (node[side]){
+        if (node[side]) {
             if (node[side].data !== data)
                 this.#delete(data, node[side]);
             else { // node.data === data
                 // delete the node node[side]
-                if (node[side].left === null){
+                if (node[side].left === null) {
                     // There are two cases:
                     // - either the node to delete has no children (node[side].right === null)
                     // - or it has just 1 child (node[side].right)
                     node[side] = node[side].right;
                 } else {
-                    if (node[side].right === null){
+                    if (node[side].right === null) {
                         // The node to delete has 1 child
                         node[side] = node[side].left;
                     } else {
@@ -128,49 +128,49 @@ export default class Tree{
                         inorderSuccessor.parent[inorderSuccessor.side] = inorderSuccessor.node.right;
                         // copy contents (data) of the inorder successor to the node
                         node[side].data = inorderSuccessor.node.data;
-                   }
+                    }
                 }
             }
         }
     }
-    #findInorderSuccessor(node){
-        if (node.right){
+    #findInorderSuccessor(node) {
+        if (node.right) {
             if (node.right.left)
                 return this.#findSmallestSuccessor(node.right);
             else
-                return ({node: node.right, parent: node,side: 'right'});
+                return ({ node: node.right, parent: node, side: 'right' });
         } else {
-             return null;
+            return null;
         }
     }
-    #findSmallestSuccessor(node){
+    #findSmallestSuccessor(node) {
         // This is to be called by #findInorderSuccessor and by #findSmallestSuccessor itself
         // So, node.left exists by construction
         if (node.left.left)
             return this.#findSmallestSuccessor(node.left);
         else
-            return ({node: node.left, parent: node,side: 'left'});
+            return ({ node: node.left, parent: node, side: 'left' });
     }
 
 
     // the following method returns the node with the given value
-    find(data){
-        return this.#findProcessNode(data,this.#root);
+    find(data) {
+        return this.#findProcessNode(data, this.#root);
     }
     // the following method is an helper method for the insert() method
     // the proper subtree is selected and its child node is processed
-    #find(data,node){
+    #find(data, node) {
         let side = node.getSubtreeSide(data);
-        return this.#findProcessNode(data,node[side]);
+        return this.#findProcessNode(data, node[side]);
     }
     // the following method process a single node (no need to modify the pointed node)
-    #findProcessNode(data,node){
-        if (node){
+    #findProcessNode(data, node) {
+        if (node) {
             if (node.data !== data)
                 return this.#find(data, node);
             else // node.data === data
                 return node;
-        } else{
+        } else {
             return null;
         }
     }
@@ -179,22 +179,22 @@ export default class Tree{
     // It traverses the tree in breadth-first level order and provide each node as an argument to the callback.
     // THen, the callback will perform an operation on each node following the order in which they are traversed.
     // The method returns an array of values if no callback is given as an argument.
-    levelOrder(callback){
-        if (callback){
+    levelOrder(callback) {
+        if (callback) {
             this.#levelOrderCallback(callback);
             //this.#levelOrderCallbackRecursive(callback);
         }
-        else{
+        else {
             return this.#levelOrderList();
             //return this.#levelOrderListRecursive();
         }
     }
-    #levelOrderCallback(callback){ // iterative approach
+    #levelOrderCallback(callback) { // iterative approach
         if (!this.#root)
             return;
 
         let queue = [this.#root];
-        while (queue.length){
+        while (queue.length) {
             //console.log(queue.map(node => this.printNode(node)));
             let node = queue.shift();
             if (node.left)
@@ -204,13 +204,13 @@ export default class Tree{
             callback(node);
         }
     }
-    #levelOrderList(){ // iterative approach
+    #levelOrderList() { // iterative approach
         let list = [];
         if (!this.#root)
             return list;
 
         let queue = [this.#root];
-        while (queue.length){
+        while (queue.length) {
             //console.log(queue.map(node => this.printNode(node)));
             let node = queue.shift();
             if (node.left)
@@ -221,7 +221,24 @@ export default class Tree{
         }
         return list;
     }
-    #levelOrderCallbackRecursive(callback,queue=this.#root?[this.#root]:[]){ // recursive approach
+    #levelOrderNodeList() { // iterative approach
+        let list = [];
+        if (!this.#root)
+            return list;
+
+        let queue = [this.#root];
+        while (queue.length) {
+            //console.log(queue.map(node => this.printNode(node)));
+            let node = queue.shift();
+            if (node.left)
+                queue.push(node.left);
+            if (node.right)
+                queue.push(node.right);
+            list.push(node);
+        }
+        return list;
+    }
+    #levelOrderCallbackRecursive(callback, queue = this.#root ? [this.#root] : []) { // recursive approach
         if (!queue.length)
             return;
         //console.log(queue.map(node => this.printNode(node)));
@@ -232,9 +249,9 @@ export default class Tree{
             queue.push(node.right);
         callback(node);
         // recursive call
-        this.#levelOrderCallbackRecursive(callback,queue);
+        this.#levelOrderCallbackRecursive(callback, queue);
     }
-    #levelOrderListRecursive(queue=this.#root?[this.#root]:[],list=[]){ // recursive approach
+    #levelOrderListRecursive(queue = this.#root ? [this.#root] : [], list = []) { // recursive approach
         if (!queue.length)
             return list;
         //console.log(queue.map(node => this.printNode(node)));
@@ -245,7 +262,7 @@ export default class Tree{
             queue.push(node.right);
         list.push(node.data);
         // recursive call
-        list = this.#levelOrderListRecursive(queue,list);
+        list = this.#levelOrderListRecursive(queue, list);
         return list;
     }
 
@@ -253,28 +270,28 @@ export default class Tree{
     // It traverses the tree in depth-first order (in-order: left-root-right) and provide each node as an argument to the callback.
     // THen, the callback will perform an operation on each node following the order in which they are traversed.
     // The method returns an array of values if no callback is given as an argument.
-    inOrder(callback){
-        if (callback){
+    inOrder(callback) {
+        if (callback) {
             this.#inOrderCallbackRecursive(callback);
         }
-        else{
+        else {
             return this.#inOrderListRecursive();
         }
     }
-    #inOrderCallbackRecursive(callback,node=this.#root){ // recursive approach
+    #inOrderCallbackRecursive(callback, node = this.#root) { // recursive approach
         if (!node)
             return;
-        this.#inOrderCallbackRecursive(callback,node.left);
+        this.#inOrderCallbackRecursive(callback, node.left);
         callback(node);
-        this.#inOrderCallbackRecursive(callback,node.right);
+        this.#inOrderCallbackRecursive(callback, node.right);
     }
-    #inOrderListRecursive(node=this.#root,list=[]){ // recursive approach
+    #inOrderListRecursive(node = this.#root, list = []) { // recursive approach
         if (!node)
             return list;
-        
-        list = this.#inOrderListRecursive(node.left,list);
+
+        list = this.#inOrderListRecursive(node.left, list);
         list.push(node.data);
-        list = this.#inOrderListRecursive(node.right,list);
+        list = this.#inOrderListRecursive(node.right, list);
 
         return list;
     }
@@ -283,28 +300,28 @@ export default class Tree{
     // It traverses the tree in depth-first order (pre-order: root-left-right) and provide each node as an argument to the callback.
     // THen, the callback will perform an operation on each node following the order in which they are traversed.
     // The method returns an array of values if no callback is given as an argument.
-    preOrder(callback){
-        if (callback){
+    preOrder(callback) {
+        if (callback) {
             this.#preOrderCallbackRecursive(callback);
         }
-        else{
+        else {
             return this.#preOrderListRecursive();
         }
     }
-    #preOrderCallbackRecursive(callback,node=this.#root){ // recursive approach
+    #preOrderCallbackRecursive(callback, node = this.#root) { // recursive approach
         if (!node)
             return;
         callback(node);
-        this.#preOrderCallbackRecursive(callback,node.left);
-        this.#preOrderCallbackRecursive(callback,node.right);
+        this.#preOrderCallbackRecursive(callback, node.left);
+        this.#preOrderCallbackRecursive(callback, node.right);
     }
-    #preOrderListRecursive(node=this.#root,list=[]){ // recursive approach
+    #preOrderListRecursive(node = this.#root, list = []) { // recursive approach
         if (!node)
             return list;
-        
+
         list.push(node.data);
-        list = this.#preOrderListRecursive(node.left,list);
-        list = this.#preOrderListRecursive(node.right,list);
+        list = this.#preOrderListRecursive(node.left, list);
+        list = this.#preOrderListRecursive(node.right, list);
 
         return list;
     }
@@ -313,27 +330,27 @@ export default class Tree{
     // It traverses the tree in depth-first order (post-order: left-right-root) and provide each node as an argument to the callback.
     // THen, the callback will perform an operation on each node following the order in which they are traversed.
     // The method returns an array of values if no callback is given as an argument.
-    postOrder(callback){
-        if (callback){
+    postOrder(callback) {
+        if (callback) {
             this.#postOrderCallbackRecursive(callback);
         }
-        else{
+        else {
             return this.#postOrderListRecursive();
         }
     }
-    #postOrderCallbackRecursive(callback,node=this.#root){ // recursive approach
+    #postOrderCallbackRecursive(callback, node = this.#root) { // recursive approach
         if (!node)
             return;
-        this.#postOrderCallbackRecursive(callback,node.left);
-        this.#postOrderCallbackRecursive(callback,node.right);
+        this.#postOrderCallbackRecursive(callback, node.left);
+        this.#postOrderCallbackRecursive(callback, node.right);
         callback(node);
     }
-    #postOrderListRecursive(node=this.#root,list=[]){ // recursive approach
+    #postOrderListRecursive(node = this.#root, list = []) { // recursive approach
         if (!node)
             return list;
-        
-        list = this.#postOrderListRecursive(node.left,list);
-        list = this.#postOrderListRecursive(node.right,list);
+
+        list = this.#postOrderListRecursive(node.left, list);
+        list = this.#postOrderListRecursive(node.right, list);
         list.push(node.data);
 
         return list;
@@ -343,7 +360,7 @@ export default class Tree{
     // The following method  returns the given node’s height,
     // i.e., the number of edges in the longest path from a given node to a leaf node.
     // If the node is null (eg, if node=tree.find(dataNotInTheTree)), it returns -1
-    height(node=this.#root){
+    height(node = this.#root) {
         if (!node)
             return -1;
         return Math.max(this.height(node.left), this.height(node.right)) + 1;
@@ -352,16 +369,16 @@ export default class Tree{
     // The following method  returns the given node’s depth,
     // i.e., the number of edges in the path from a given node to the tree’s root node.
     // If the node is null (eg, if node=tree.find(dataNotInTheTree)), it returns -1
-    depth(node=this.#root){
+    depth(node = this.#root) {
         if (!node)
             return -1;
 
         let data = node.data;
         return this.#depth(data);
     }
-    #depth(data, node=this.#root){
-        if (node){
-            if (node.data !== data){
+    #depth(data, node = this.#root) {
+        if (node) {
+            if (node.data !== data) {
                 let side = node.getSubtreeSide(data);
                 return this.#depth(data, node[side]) + 1;
             } else {// node.data === data
@@ -372,22 +389,73 @@ export default class Tree{
         }
     }
 
-    // The following method has been adapted from the function in 
-    // https://www.theodinproject.com/lessons/javascript-binary-search-trees
-    prettyPrint(node = this.#root, prefix = "", isLeft = true){
-        if (node === null) {
-          return;
+    // The following method checks if the tree is balanced,
+    // ie, if the difference between heights of the left subtree and the right subtree 
+    // of every node is not more than 1.
+    isBalanced() {
+        // each node must be analyzed
+        // start from leaf nodes and proceed up to the root for better performance
+        // indeed, it is faster to compute the height at lower levels
+        // and, in case of unbalanced subtree in there, you can potentially save more computations by stopping early 
+        // Here, an array with the nodes in level traversal (BFS) order is used, and nodes are analyzed in reverse
+        let nodes = this.#levelOrderNodeList();
+
+        for (let i = nodes.length - 1; i >= 0; i--) {
+            let node = nodes[i];
+            if (!this.#isNodeBalanced(node)) {
+                //console.log(`Node ${this.printNode(node)} subtree is not balanced`)
+                return false;
+            }
+            //console.log(`Node ${this.printNode(node)} subtree is balanced`)
         }
-        if (node.right !== null) {
-          this.prettyPrint(node.right, `${prefix}${isLeft ? "│   " : "    "}`, false);
-        }
-        console.log(`${prefix}${isLeft ? "└── " : "┌── "}${node.data}`);
-        if (node.left !== null) {
-          this.prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
+        return true;
+    }
+    #isNodeBalanced(node) {
+        if (!node)
+            return true;
+
+        if (node.left) {
+            if (node.right) {
+                let heightLeft = this.height(node.left);
+                let heightRight = this.height(node.right);
+                return Math.abs(heightLeft - heightRight) < 2;
+            } else {
+                // node has only 1 child, which must be a leaf to be balanced
+                if (node.left.left || node.left.right)
+                    return false;
+                else // the child is a leaf
+                    return true;
+            }
+        } else {
+            if (node.right) {
+                // node has only 1 child, which must be a leaf to be balanced
+                if (node.right.left || node.right.right)
+                    return false;
+                else // the child is a leaf
+                    return true;
+            } else {
+                // node is a leaf: it is balanced
+                return true;
+            }
         }
     }
 
-    printNode(node){
+    // The following method has been adapted from the function in 
+    // https://www.theodinproject.com/lessons/javascript-binary-search-trees
+    prettyPrint(node = this.#root, prefix = "", isLeft = true) {
+        if (node === null) {
+            return;
+        }
+        if (node.right !== null) {
+            this.prettyPrint(node.right, `${prefix}${isLeft ? "│   " : "    "}`, false);
+        }
+        console.log(`${prefix}${isLeft ? "└── " : "┌── "}${node.data}`);
+        if (node.left !== null) {
+            this.prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
+        }
+    }
+
+    printNode(node) {
         return `'${node ? node.data : node}'`;
     }
 }
