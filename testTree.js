@@ -1,7 +1,5 @@
 import Tree from './Tree.js'
 
-let printNode = (node) => `'${node ? node.data : node}'`;
-
 let array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 let tree = new Tree(array);
 
@@ -19,7 +17,7 @@ for (let data of dataToInsert){
 let dataToFind = [8,7,323,24, 67,93, 7000];
 for (let data of dataToFind){
     let matchingNode = tree.find(data);
-    console.log(`\nThe node with value ${data} is ${printNode(matchingNode)}`);
+    console.log(`\nThe node with value ${data} is ${tree.printNode(matchingNode)}`);
 }
 
 let dataToDelete = [9, 8,67, 23, 3, 4, 123];
@@ -46,3 +44,15 @@ for (let data of dataToInsert){
     emptyTree.delete(data);
     emptyTree.prettyPrint();
 }
+
+// ---------------------------------------------------------------------
+
+console.log('\n\nBalanced Search Tree (re-filled):');
+tree = new Tree(array);
+tree.prettyPrint();
+
+const testCallback = (node) => {console.log(`testCallback: processing node ${tree.printNode(node)}`)};
+console.log('\n\nInorder traversal (callback):');
+tree.levelOrder(testCallback);
+console.log('\nInorder traversal (without callback):')
+console.log(tree.levelOrder());

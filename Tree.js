@@ -86,8 +86,7 @@ export default class Tree{
                     } else {
                         // find the inorder successor of the node
                         const inorderSuccessor = this.#findInorderSuccessor(this.#root);
-                        //const printNode = (node) => `'${node ? node.data : node}'`;
-                        //console.log(`Successor of ${printNode(this.#root)} is ${printNode(inorderSuccessor.node)} at the ${inorderSuccessor.side} of ${printNode(inorderSuccessor.parent)}`);
+                        //console.log(`Successor of ${this.printNode(this.#root)} is ${this.printNode(inorderSuccessor.node)} at the ${inorderSuccessor.side} of ${this.printNode(inorderSuccessor.parent)}`);
                         // delete the inorder successor from the tree
                         // see #delete(data,node) for details
                         inorderSuccessor.parent[inorderSuccessor.side] = inorderSuccessor.node.right;
@@ -119,8 +118,7 @@ export default class Tree{
                     } else {
                         // find the inorder successor of the node
                         const inorderSuccessor = this.#findInorderSuccessor(node[side]);
-                        //const printNode = (node) => `'${node ? node.data : node}'`;
-                        //console.log(`Successor of ${printNode(node[side])} is ${printNode(inorderSuccessor.node)} at the ${inorderSuccessor.side} of ${printNode(inorderSuccessor.parent)}`);
+                        //console.log(`Successor of ${this.printNode(node[side])} is ${this.printNode(inorderSuccessor.node)} at the ${inorderSuccessor.side} of ${this.printNode(inorderSuccessor.parent)}`);
                         // delete the inorder successor from the tree
                         // this has to be done before updating the .left and .right nodes with the older values
                         // indeed, if the inorder successor is node[side].right, it will not be the .right node 
@@ -177,6 +175,51 @@ export default class Tree{
         }
     }
 
+    // The following method accepts an optional callback function as its parameter.
+    // It traverses the tree in breadth-first level order and provide each node as an argument to the callback.
+    // THen, the callback will perform an operation on each node following the order in which they are traversed.
+    // The method returns an array of values if no callback is given as an argument.
+    levelOrder(callback){
+        if (callback){
+            this.#levelOrderCallback(callback);
+        }
+        else{
+            return this.#levelOrderList();
+        }
+    }
+    #levelOrderCallback(callback){ // iterative approach
+        if (!this.#root)
+            return;
+
+        let queue = [this.#root];
+        while (queue.length){
+            //console.log(queue.map(node => this.printNode(node)));
+            let node = queue.shift();
+            if (node.left)
+                queue.push(node.left);
+            if (node.right)
+                queue.push(node.right);
+            callback(node);
+        }
+    }
+    #levelOrderList(){ // iterative approach
+        let list = [];
+        if (!this.#root)
+            return list;
+
+        let queue = [this.#root];
+        while (queue.length){
+            //console.log(queue.map(node => this.printNode(node)));
+            let node = queue.shift();
+            if (node.left)
+                queue.push(node.left);
+            if (node.right)
+                queue.push(node.right);
+            list.push(node.data);
+        }
+        return list;
+    }
+
     // The following method has been adapted from the function in 
     // https://www.theodinproject.com/lessons/javascript-binary-search-trees
     prettyPrint(node = this.#root, prefix = "", isLeft = true){
@@ -190,5 +233,9 @@ export default class Tree{
         if (node.left !== null) {
           this.prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
         }
+    }
+
+    printNode(node){
+        return `'${node ? node.data : node}'`;
     }
 }
