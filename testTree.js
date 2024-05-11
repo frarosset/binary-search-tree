@@ -70,3 +70,9 @@ tree.preOrder(testCallback);
 console.log('\nDFS: Pre-Order traversal {Root-Left-Right} (without callback):')
 console.log(tree.preOrder());
 tree.prettyPrint();
+
+console.log('\n\nDFS: Post-Order traversal {Left-Right-Root} (callback):');
+tree.postOrder(testCallback);
+console.log('\nDFS: Post-Order traversal {Left-Right-Root} (without callback):')
+console.log(tree.postOrder());
+tree.prettyPrint();

@@ -309,6 +309,36 @@ export default class Tree{
         return list;
     }
 
+    // The following method accepts an optional callback function as its parameter.
+    // It traverses the tree in depth-first order (post-order: left-right-root) and provide each node as an argument to the callback.
+    // THen, the callback will perform an operation on each node following the order in which they are traversed.
+    // The method returns an array of values if no callback is given as an argument.
+    postOrder(callback){
+        if (callback){
+            this.#postOrderCallbackRecursive(callback);
+        }
+        else{
+            return this.#postOrderListRecursive();
+        }
+    }
+    #postOrderCallbackRecursive(callback,node=this.#root){ // recursive approach
+        if (!node)
+            return;
+        this.#postOrderCallbackRecursive(callback,node.left);
+        this.#postOrderCallbackRecursive(callback,node.right);
+        callback(node);
+    }
+    #postOrderListRecursive(node=this.#root,list=[]){ // recursive approach
+        if (!node)
+            return list;
+        
+        list = this.#postOrderListRecursive(node.left,list);
+        list = this.#postOrderListRecursive(node.right,list);
+        list.push(node.data);
+
+        return list;
+    }
+
     // The following method has been adapted from the function in 
     // https://www.theodinproject.com/lessons/javascript-binary-search-trees
     prettyPrint(node = this.#root, prefix = "", isLeft = true){
