@@ -440,6 +440,16 @@ export default class Tree {
         }
     }
 
+    // The following method rebalances an unbalanced tree
+    rebalance() {
+        // get an array with ordered data (there are no duplicates): O(n)
+        // use in-order traversal
+        let array = this.#inOrderListRecursive();
+
+        // build tree from sorted array, resetting the previous one: O(n)
+        this.#root = this.#buildTreeFromSortedArray(array, 0, array.length - 1);
+    }
+
     // The following method has been adapted from the function in 
     // https://www.theodinproject.com/lessons/javascript-binary-search-trees
     prettyPrint(node = this.#root, prefix = "", isLeft = true) {

@@ -92,3 +92,7 @@ for (let data of dataToFind){
 let isTreeBalanced = tree.isBalanced();
 console.log(`\n\nThe following tree is ${isTreeBalanced?'balanced':'not balanced'}:`);
 tree.prettyPrint();
+tree.rebalance();
+isTreeBalanced = tree.isBalanced();
+console.log(`After rebalancing it becomes ${isTreeBalanced?'balanced':'not balanced'}:`);
+tree.prettyPrint();
