@@ -349,6 +349,29 @@ export default class Tree{
         return Math.max(this.height(node.left), this.height(node.right)) + 1;
     }
 
+    // The following method  returns the given node’s depth,
+    // i.e., the number of edges in the path from a given node to the tree’s root node.
+    // If the node is null (eg, if node=tree.find(dataNotInTheTree)), it returns -1
+    depth(node=this.#root){
+        if (!node)
+            return -1;
+
+        let data = node.data;
+        return this.#depth(data);
+    }
+    #depth(data, node=this.#root){
+        if (node){
+            if (node.data !== data){
+                let side = node.getSubtreeSide(data);
+                return this.#depth(data, node[side]) + 1;
+            } else {// node.data === data
+                return 0;
+            }
+        } else {
+            return -1;
+        }
+    }
+
     // The following method has been adapted from the function in 
     // https://www.theodinproject.com/lessons/javascript-binary-search-trees
     prettyPrint(node = this.#root, prefix = "", isLeft = true){

@@ -78,7 +78,7 @@ console.log(tree.postOrder());
 tree.prettyPrint();
 
 //let dataToAnalyz = [8,7,323,24, 67,93, 7000];
-console.log('\n\nGetting node\'s height (number of edges in the longest path from the node to a leaf)');
+console.log('\n\nGetting node\'s height (number of edges in the longest path from the node to a leaf) and depth (number of edges in the path from the node to the root)');
 for (let data of dataToInsert){
     tree.insert(data);
 }
@@ -86,5 +86,6 @@ tree.prettyPrint();
 for (let data of dataToFind){
     let node = tree.find(data);
     let height = tree.height(node);
-    console.log(`The node with value ${data} is ${tree.printNode(node)} and has height ${height}`);
+    let depth = tree.depth(node);
+    console.log(`The node with value ${data} is ${tree.printNode(node)} and has height ${height} and depth ${depth}`);
 }
