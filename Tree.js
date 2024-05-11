@@ -234,7 +234,7 @@ export default class Tree{
         // recursive call
         this.#levelOrderCallbackRecursive(callback,queue);
     }
-    #levelOrderListRecursive(callback,queue=this.#root?[this.#root]:[],list=[]){ // recursive approach
+    #levelOrderListRecursive(queue=this.#root?[this.#root]:[],list=[]){ // recursive approach
         if (!queue.length)
             return list;
         //console.log(queue.map(node => this.printNode(node)));
@@ -245,7 +245,37 @@ export default class Tree{
             queue.push(node.right);
         list.push(node.data);
         // recursive call
-        list = this.#levelOrderListRecursive(callback,queue,list);
+        list = this.#levelOrderListRecursive(queue,list);
+        return list;
+    }
+
+    // The following method accepts an optional callback function as its parameter.
+    // It traverses the tree in depth-first order (in-order: left-root-right) and provide each node as an argument to the callback.
+    // THen, the callback will perform an operation on each node following the order in which they are traversed.
+    // The method returns an array of values if no callback is given as an argument.
+    inOrder(callback){
+        if (callback){
+            this.#inOrderCallbackRecursive(callback);
+        }
+        else{
+            return this.#inOrderListRecursive();
+        }
+    }
+    #inOrderCallbackRecursive(callback,node=this.#root){ // recursive approach
+        if (!node)
+            return;
+        this.#inOrderCallbackRecursive(callback,node.left);
+        callback(node);
+        this.#inOrderCallbackRecursive(callback,node.right);
+    }
+    #inOrderListRecursive(node=this.#root,list=[]){ // recursive approach
+        if (!node)
+            return list;
+        
+        list = this.#inOrderListRecursive(node.left,list);
+        list.push(node.data);
+        list = this.#inOrderListRecursive(node.right,list);
+
         return list;
     }
 

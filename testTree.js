@@ -52,7 +52,13 @@ tree = new Tree(array);
 tree.prettyPrint();
 
 const testCallback = (node) => {console.log(`testCallback: processing node ${tree.printNode(node)}`)};
-console.log('\n\nInorder traversal (callback):');
+
+console.log('\n\nBFS: Level-Order traversal (callback):');
 tree.levelOrder(testCallback);
-console.log('\nInorder traversal (without callback):')
+console.log('\nBFS: Level-Order traversal (without callback):')
 console.log(tree.levelOrder());
+
+console.log('\n\nDFS: In-Order traversal {Left-Root-Right} (callback):');
+tree.inOrder(testCallback);
+console.log('\nDFS: In-Order traversal {Left-Root-Right} (without callback):')
+console.log(tree.inOrder());
